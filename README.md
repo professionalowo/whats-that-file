@@ -1,0 +1,1 @@
+A zig utility that thells you about the file you provide
