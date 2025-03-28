@@ -1,9 +1,10 @@
 const std = @import("std");
-
-/// This imports the separate module containing `root.zig`. Take a look in `build.zig` for details.
 const args = @import("arguments");
 
 pub fn main() !void {
+    const stdout = std.io.getStdOut().writer();
+    const stderr = std.io.getStdOut().writer();
+
     var gpa = std.heap.GeneralPurposeAllocator(.{ .thread_safe = false }).init;
     defer switch (gpa.deinit()) {
         .leak => @panic("allocator leaked memory"),
@@ -18,9 +19,9 @@ pub fn main() !void {
     const allocator = arena.allocator();
 
     const realPath = args.getRealPathOfInArg(allocator) catch {
-        _ = try std.io.getStdErr().writer().print("please provide a valid filepath");
-        std.process.exit(1);
+        try stderr.print("please provide a valid filepath", .{});
+        defer std.process.exit(1);
     };
 
-    std.debug.print("Path: {s}\n", .{realPath});
+    try stdout.print("{s}", .{realPath});
 }
