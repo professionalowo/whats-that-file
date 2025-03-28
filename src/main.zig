@@ -1,7 +1,7 @@
 const std = @import("std");
 
 /// This imports the separate module containing `root.zig`. Take a look in `build.zig` for details.
-const lib = @import("whats_that_file_lib");
+const args = @import("arguments");
 
 pub fn main() !void {
     var gpa = std.heap.GeneralPurposeAllocator(.{ .thread_safe = false }).init;
@@ -16,11 +16,11 @@ pub fn main() !void {
     defer arena.deinit();
 
     const allocator = arena.allocator();
-    // Parse args into string array (error union needs 'try')
 
-    const path = lib.getPathAlloc(allocator) catch @panic("Could not obtain the filepath");
+    const realPath = args.getRealPathOfInArg(allocator) catch {
+        _ = try std.io.getStdErr().writer().print("please provide a valid filepath");
+        std.process.exit(1);
+    };
 
-    const absolute = try lib.resolveAbsoluteAlloc(path, allocator);
-
-    std.debug.print("Path: {s}\n", .{absolute});
+    std.debug.print("Path: {s}\n", .{realPath});
 }
