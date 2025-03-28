@@ -17,7 +17,7 @@ fn getPathAlloc(allocator: Allocator) ![]u8 {
 
 fn readFromStdinAlloc(allocator: Allocator) ![]u8 {
     const stdin = std.io.getStdIn().reader();
-    return try stdin.readUntilDelimiterOrEofAlloc(allocator, '\n', fs.max_path_bytes) orelse @panic("read null from stdin");
+    return try stdin.readUntilDelimiterOrEofAlloc(allocator, '\n', fs.max_path_bytes) orelse error.ReadError("Failed to read from stdin or received null input");
 }
 
 fn resolveAbsoluteAlloc(path: []u8, allocator: Allocator) ![]u8 {
