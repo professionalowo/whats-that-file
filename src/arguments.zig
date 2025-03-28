@@ -17,7 +17,7 @@ fn getPathAlloc(allocator: Allocator) ![]u8 {
 
 fn readFromStdinAlloc(allocator: Allocator) ![]u8 {
     const stdin = std.io.getStdIn().reader();
-    return try stdin.readUntilDelimiterOrEofAlloc(allocator, '\n', fs.max_path_bytes) orelse error.ReadError("Failed to read from stdin or received null input");
+    return try stdin.readUntilDelimiterOrEofAlloc(allocator, '\n', fs.max_path_bytes) orelse @panic("failed to read from stdin");
 }
 
 fn resolveAbsoluteAlloc(path: []u8, allocator: Allocator) ![]u8 {
@@ -35,14 +35,10 @@ fn realpathAlloc(pathname: []const u8, allocator: Allocator) ![]u8 {
 }
 
 pub fn getRealPathOfInArg(allocator: Allocator) ![]u8 {
-    const path = arguments.getPathAlloc(allocator) catch |err| {
-        return error.WrapErrorMessage("Failed to obtain the filepath", err);
-    };
+    const path = try arguments.getPathAlloc(allocator);
     defer allocator.free(path);
 
-    const absolute = try arguments.resolveAbsoluteAlloc(path, allocator) catch |err| {
-        return error.WrapErrorMessage("Failed to resolve absolute path", err);
-    };
+    const absolute = try arguments.resolveAbsoluteAlloc(path, allocator);
     defer allocator.free(absolute);
 
     const realPath = try arguments.realpathAlloc(absolute, allocator);
