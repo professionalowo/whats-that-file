@@ -2,18 +2,25 @@
 //! you are making an executable, the convention is to delete this file and
 //! start with main.zig instead.
 const std = @import("std");
+const fs = std.fs;
+const Allocator = std.mem.Allocator;
 
-pub fn get_path(args: [][:0]u8) ![]u8 {
+pub fn getPathAlloc(allocator: Allocator) ![]u8 {
+    const args = try std.process.argsAlloc(allocator);
     if (args.len == 2) {
         return args[1];
     }
-    return read_from_stdin();
+    return try readFromStdinAlloc(allocator);
 }
 
-fn read_from_stdin() ![]u8 {
+fn readFromStdinAlloc(allocator: Allocator) ![]u8 {
     const stdin = std.io.getStdIn().reader();
-    const buff_size = comptime (1024 * 8);
-    var buf = [_]u8{0} ** buff_size;
-    const result = try stdin.readUntilDelimiterOrEof(&buf, '\n') orelse @panic("read null from stdin");
-    return result;
+    return try stdin.readUntilDelimiterOrEofAlloc(allocator, '\n', 1024 * 8) orelse @panic("read null from stdin");
+}
+
+pub fn resolveAbsoluteAlloc(path: []u8, allocator: Allocator) ![]u8 {
+    const cwd = try fs.cwd().realpathAlloc(allocator, ".");
+    defer allocator.free(cwd);
+
+    return try fs.path.resolve(allocator, &.{ cwd, path });
 }
