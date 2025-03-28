@@ -1,1 +1,4 @@
-A zig utility that thells you about the file you provide
+# Whats that file (wtf)
+
+A small zig utility that tells you the full real path of a file or directory
+Currently doesnt work with files in path, only resolvable from current working directory
