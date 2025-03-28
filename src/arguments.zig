@@ -35,10 +35,14 @@ fn realpathAlloc(pathname: []const u8, allocator: Allocator) ![]u8 {
 }
 
 pub fn getRealPathOfInArg(allocator: Allocator) ![]u8 {
-    const path = arguments.getPathAlloc(allocator) catch @panic("Could not obtain the filepath");
+    const path = arguments.getPathAlloc(allocator) catch |err| {
+        return error.WrapErrorMessage("Failed to obtain the filepath", err);
+    };
     defer allocator.free(path);
 
-    const absolute = try arguments.resolveAbsoluteAlloc(path, allocator);
+    const absolute = try arguments.resolveAbsoluteAlloc(path, allocator) catch |err| {
+        return error.WrapErrorMessage("Failed to resolve absolute path", err);
+    };
     defer allocator.free(absolute);
 
     const realPath = try arguments.realpathAlloc(absolute, allocator);
