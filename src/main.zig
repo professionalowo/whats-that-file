@@ -2,9 +2,6 @@ const std = @import("std");
 const args = @import("arguments");
 const paths = @import("paths");
 
-const stdout = std.io.getStdOut().writer();
-const stderr = std.io.getStdOut().writer();
-
 pub fn main() !void {
     var buffer: [std.fs.max_name_bytes * 16]u8 = undefined;
     var fba = std.heap.FixedBufferAllocator.init(&buffer);
@@ -17,10 +14,13 @@ pub fn main() !void {
     const realPath = paths.getRealPathAlloc(allocator, inArg) catch errexit("please provide a valid filepath");
     defer allocator.free(realPath);
 
+    const stdout = std.io.getStdOut().writer();
     try stdout.print("{s}", .{realPath});
 }
 
+/// Prints an error message to stderr and exits with status code 1.
 fn errexit(comptime message: []const u8) noreturn {
     defer std.process.exit(1);
+    const stderr = std.io.getStdOut().writer();
     try stderr.print(message, .{});
 }
