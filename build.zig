@@ -19,21 +19,23 @@ pub fn build(b: *std.Build) void {
     // some compilation options, such as optimization mode and linked system libraries.
     // Every executable or library we compile will be based on one or more modules.
     const arguments_mod = b.createModule(.{
-        // `root_source_file` is the Zig "entry point" of the module. If a module
-        // only contains e.g. external object files, you can make this `null`.
-        // In this case the main source file is merely a path, however, in more
-        // complicated build scripts, this could be a generated file.
         .root_source_file = b.path("src/arguments.zig"),
         .target = target,
         .optimize = optimize,
     });
 
     const paths_mod = b.createModule(.{
+        .root_source_file = b.path("src/paths.zig"),
+        .target = target,
+        .optimize = optimize,
+    });
+
+    const readline_mod = b.createModule(.{
         // `root_source_file` is the Zig "entry point" of the module. If a module
         // only contains e.g. external object files, you can make this `null`.
         // In this case the main source file is merely a path, however, in more
         // complicated build scripts, this could be a generated file.
-        .root_source_file = b.path("src/paths.zig"),
+        .root_source_file = b.path("src/readline.zig"),
         .target = target,
         .optimize = optimize,
     });
@@ -52,8 +54,10 @@ pub fn build(b: *std.Build) void {
     // Modules can depend on one another using the `std.Build.Module.addImport` function.
     // This is what allows Zig source code to use `@import("foo")` where 'foo' is not a
     // file path. In this case, we set up `exe_mod` to import `lib_mod`.
+    arguments_mod.addImport("readline", readline_mod);
     exe_mod.addImport("arguments", arguments_mod);
     exe_mod.addImport("paths", paths_mod);
+    exe_mod.addImport("readline", readline_mod);
 
     // This creates another `std.Build.Step.Compile`, but this one builds an executable
     // rather than a static library.
@@ -61,6 +65,8 @@ pub fn build(b: *std.Build) void {
         .name = "wtf",
         .root_module = exe_mod,
     });
+
+    exe.linkSystemLibrary("readline");
 
     // This declares intent for the executable to be installed into the
     // standard location when the user invokes the "install" step (the default

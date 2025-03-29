@@ -1,6 +1,7 @@
 //! By convention, root.zig is the root source file when making a library. If
 //! you are making an executable, the convention is to delete this file and
 //! start with main.zig instead.
+const readline = @import("readline");
 const std = @import("std");
 const fs = std.fs;
 const Allocator = std.mem.Allocator;
@@ -16,6 +17,5 @@ pub fn getInArgAlloc(allocator: Allocator) !?[]const u8 {
 }
 
 fn readFromStdinAlloc(allocator: Allocator) !?[]const u8 {
-    const stdin = std.io.getStdIn().reader();
-    return try stdin.readUntilDelimiterOrEofAlloc(allocator, '\n', fs.max_path_bytes);
+    return try readline.readLineAlloc(allocator, "");
 }
