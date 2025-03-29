@@ -29,3 +29,4 @@ zig build --release=fast
 ## Dependencies
 
 [GNU Readline](https://tiswww.case.edu/php/chet/readline/rltop.html)
+libc
