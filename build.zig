@@ -57,7 +57,6 @@ pub fn build(b: *std.Build) void {
     arguments_mod.addImport("readline", readline_mod);
     exe_mod.addImport("arguments", arguments_mod);
     exe_mod.addImport("paths", paths_mod);
-    exe_mod.addImport("readline", readline_mod);
 
     // This creates another `std.Build.Step.Compile`, but this one builds an executable
     // rather than a static library.
