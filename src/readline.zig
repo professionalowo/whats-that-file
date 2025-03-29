@@ -9,8 +9,5 @@ pub fn readLineAlloc(allocator: Allocator, comptime prompt: [:0]const u8) !?[]co
     const line = readline(prompt) orelse return null;
     defer free(line);
 
-    const span = mem.span(line);
-    const result = try allocator.dupe(u8, span);
-
-    return result;
+    return try allocator.dupe(u8, mem.span(line));
 }
