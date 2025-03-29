@@ -9,9 +9,10 @@ pub fn main() !void {
     const allocator = fba.allocator();
 
     const inArg = try args.getInArgAlloc(allocator) orelse errexit("please provide at least one argument");
+    const trimmed = std.mem.trim(u8, inArg, &[_]u8{ '\r', '\n', ' ' });
     defer allocator.free(inArg);
 
-    const realPath = paths.getRealPathAlloc(allocator, inArg) catch errexit("please provide a valid filepath");
+    const realPath = paths.getRealPathAlloc(allocator, trimmed) catch errexit("please provide a valid filepath");
     defer allocator.free(realPath);
 
     const stdout = std.io.getStdOut().writer();
