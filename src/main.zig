@@ -1,5 +1,6 @@
 const std = @import("std");
 const args = @import("arguments");
+const paths = @import("paths");
 
 pub fn main() !void {
     const stdout = std.io.getStdOut().writer();
@@ -10,7 +11,10 @@ pub fn main() !void {
 
     const allocator = fba.allocator();
 
-    const realPath = args.getRealPathOfInArg(allocator) catch {
+    const inArg = try args.getInArgAlloc(allocator);
+    defer allocator.free(inArg);
+
+    const realPath = paths.getRealPathAlloc(inArg, allocator) catch {
         try stderr.print("please provide a valid filepath", .{});
         defer std.process.exit(1);
     };
