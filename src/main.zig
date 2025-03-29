@@ -11,7 +11,10 @@ pub fn main() !void {
 
     const allocator = fba.allocator();
 
-    const inArg = try args.getInArgAlloc(allocator);
+    const inArg = try args.getInArgAlloc(allocator) orelse {
+        try stderr.print("please provide at least one argument", .{});
+        defer std.process.exit(1);
+    };
     defer allocator.free(inArg);
 
     const realPath = paths.getRealPathAlloc(allocator, inArg) catch {

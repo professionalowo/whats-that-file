@@ -9,7 +9,7 @@ const stdin = std.io.getStdIn().reader();
 
 /// Reads the first argument from the command line or stdin if no argument is
 /// provided. The argument is allocated using the provided `allocator`.
-pub fn getInArgAlloc(allocator: Allocator) ![]u8 {
+pub fn getInArgAlloc(allocator: Allocator) !?[]u8 {
     const args = try std.process.argsAlloc(allocator);
     if (args.len == 2) {
         return args[1];
@@ -17,6 +17,6 @@ pub fn getInArgAlloc(allocator: Allocator) ![]u8 {
     return try readFromStdinAlloc(allocator);
 }
 
-fn readFromStdinAlloc(allocator: Allocator) ![]u8 {
-    return try stdin.readUntilDelimiterOrEofAlloc(allocator, '\n', fs.max_path_bytes) orelse @panic("failed to read from stdin");
+fn readFromStdinAlloc(allocator: Allocator) !?[]u8 {
+    return try stdin.readUntilDelimiterOrEofAlloc(allocator, '\n', fs.max_path_bytes);
 }
