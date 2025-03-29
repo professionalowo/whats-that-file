@@ -7,6 +7,8 @@ const Allocator = std.mem.Allocator;
 
 const stdin = std.io.getStdIn().reader();
 
+/// Reads the first argument from the command line or stdin if no argument is
+/// provided. The argument is allocated using the provided `allocator`.
 pub fn getInArgAlloc(allocator: Allocator) ![]u8 {
     const args = try std.process.argsAlloc(allocator);
     if (args.len == 2) {
