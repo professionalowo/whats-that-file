@@ -1,5 +1,4 @@
-const std = @import("std");
-const mem = std.mem;
+const mem = @import("std").mem;
 const Allocator = mem.Allocator;
 
 extern var rl_completion_append_character: c_int;
