@@ -14,7 +14,7 @@ pub fn main() !void {
     const inArg = try args.getInArgAlloc(allocator);
     defer allocator.free(inArg);
 
-    const realPath = paths.getRealPathAlloc(inArg, allocator) catch {
+    const realPath = paths.getRealPathAlloc(allocator, inArg) catch {
         try stderr.print("please provide a valid filepath", .{});
         defer std.process.exit(1);
     };
