@@ -19,7 +19,7 @@ pub fn build(b: *std.Build) void {
     // some compilation options, such as optimization mode and linked system libraries.
     // Every executable or library we compile will be based on one or more modules.
     const arguments_mod = b.createModule(.{
-        .root_source_file = b.path("src/arguments.zig"),
+        .root_source_file = b.path("src/path/arguments.zig"),
         .target = target,
         .optimize = optimize,
     });
@@ -35,7 +35,7 @@ pub fn build(b: *std.Build) void {
         // only contains e.g. external object files, you can make this `null`.
         // In this case the main source file is merely a path, however, in more
         // complicated build scripts, this could be a generated file.
-        .root_source_file = b.path("src/readline.zig"),
+        .root_source_file = b.path("src/path/readline.zig"),
         .target = target,
         .optimize = optimize,
     });
