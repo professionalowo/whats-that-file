@@ -17,5 +17,5 @@ pub fn getInArgAlloc(allocator: Allocator) !?[]const u8 {
 }
 
 fn readFromStdinAlloc(allocator: Allocator) !?[]const u8 {
-    return try readline.readLineAlloc(allocator, "");
+    return try readline.readLineAlloc(allocator, "Path: ");
 }
