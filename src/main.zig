@@ -3,7 +3,7 @@ const args = @import("arguments");
 const paths = @import("paths");
 
 pub fn main() !void {
-    var buffer: [std.fs.max_name_bytes * 16]u8 = undefined;
+    var buffer: [std.fs.max_name_bytes * 32]u8 = undefined;
     var fba = std.heap.FixedBufferAllocator.init(&buffer);
 
     const allocator = fba.allocator();
