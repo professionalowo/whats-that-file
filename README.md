@@ -23,7 +23,7 @@ zig build --release=fast
 Build with optimizations fot size:
 
 ```bash
-zig build --release=fast
+zig build --release=small
 ```
 
 ## Dependencies
