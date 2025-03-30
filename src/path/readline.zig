@@ -8,7 +8,7 @@ extern fn free(ptr: ?*anyopaque) callconv(.C) void;
 /// Reads a line from stdin using the GNU Readline library.
 /// The line is allocated using the provided `allocator`.
 /// The caller has to free the returned slice
-pub fn readlineAlloc(allocator: mem.Allocator, comptime prompt: [:0]const u8) !?[]const u8 {
+pub fn readlineAlloc(allocator: mem.Allocator, prompt: [:0]const u8) !?[]const u8 {
     if (rl_completion_append_character != 0) {
         rl_completion_append_character = 0;
     }
