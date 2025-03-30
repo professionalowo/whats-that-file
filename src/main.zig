@@ -22,6 +22,6 @@ pub fn main() !void {
 /// Prints an error message to stderr and exits with status code 1.
 fn errexit(comptime message: []const u8) noreturn {
     defer std.process.exit(1);
-    const stderr = std.io.getStdOut().writer();
-    try stderr.print(message, .{});
+    const stderr = std.io.getStdErr().writer();
+    stderr.print(message, .{}) catch {};
 }
